@@ -438,7 +438,7 @@ namespace Mouser.AppManager
         {
             using (Domain.ApplicationContext context = new Domain.ApplicationContext())
             {
-                List<Manufacturer> manufacturers = await context.Manufacturers.Where(m => m.MouserID != 0).ToListAsync();
+                List<Manufacturer> manufacturers = await context.Manufacturers.Where(m => m.MouserID != 0 && m.SearchText == null).ToListAsync();
                 ApiRegInfo apiRegInfo = await context.ApiRegInfos.FirstOrDefaultAsync(a => a.IsActive);
                 Proxy proxy = await context.Proxies.FirstOrDefaultAsync(p => p.IsActive);
                 string[] alphabet = { ".", "1", "2", "3", "4", "5", "6", "7", "8", "9" };

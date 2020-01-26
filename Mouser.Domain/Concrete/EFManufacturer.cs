@@ -23,7 +23,7 @@ namespace Mouser.Domain.Concrete
         {
             //Все производители
             var allManufacturers = await _context.Manufacturers
-                .Where(m => m.MouserID != 0 && m.Name != "" && m.NameAPI != "" && m.NumberOfResult >= m.StartingRecord)
+                .Where(m => m.MouserID != 0 && m.SearchText != null && m.NumberOfResult >= m.StartingRecord)
                 .OrderByDescending(m => m.NumberOfResult).ThenBy(m => m.Id)
                 .ToListAsync();
             //Все занятые

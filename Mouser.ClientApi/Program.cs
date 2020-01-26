@@ -42,7 +42,7 @@ namespace Mouser.ClientApi
                         Manufacturer availableManufacturer = await eFManufacturer.GetAvailableManufacturerAsync();
                         //sw.WriteLine(availableManufacturer?.MouserID);
                         if (availableApiRegInfo != null && availableProxy != null && availableManufacturer != null
-                            && !context.ApiSearchSessions.Where(a => a.IsBusy && a.Date == DateTime.Today).Select(a => a.ApiRegInfo.Id).Contains(availableApiRegInfo.Id))
+                            && !context.ApiSearchSessions.Where(a => a.IsBusy && a.Date == DateTime.Today).Select(a => a.Manufacturer.Id).Contains(availableManufacturer.Id))
                         {
                             //Создаем очередь
                             apiSearchSession = new ApiSearchSession
@@ -64,7 +64,7 @@ namespace Mouser.ClientApi
                             {
                                 startingRecord = countIteration != 0 ? countIteration * 50 + 1 : 0;
                                 await Mouser.Service.Api.Methods.SearchByKeywordMfrRequestAsync
-                                    (context, availableProxy, availableApiRegInfo, availableManufacturer.SearchText, availableManufacturer, 50, startingRecord);
+                                    (context, availableProxy, availableApiRegInfo, availableManufacturer.SearchText ?? ".", availableManufacturer, 50, startingRecord);
                                 await eFApiSearchSession.AddIterationAsync(apiSearchSession);
                                 count++;
                                 countIteration++;
