@@ -44,38 +44,38 @@
                 .ForeignKey("dbo.Manufacturers", t => t.Manufacturer_Id, cascadeDelete: true)
                 .Index(t => t.Category_Id)
                 .Index(t => t.Manufacturer_Id);
-            
-            //CreateTable(
-            //    "dbo.Categories",
-            //    c => new
-            //        {
-            //            Id = c.Int(nullable: false, identity: true),
-            //            Name = c.String(),
-            //            ParentId = c.Int(nullable: false),
-            //            IsCategory = c.Boolean(nullable: false),
-            //            Manufacturer_Id = c.Int(nullable: false),
-            //        })
-            //    .PrimaryKey(t => t.Id)
-            //    .ForeignKey("dbo.Manufacturers", t => t.Manufacturer_Id, cascadeDelete: true)
-            //    .Index(t => t.Manufacturer_Id);
-            
-            //CreateTable(
-            //    "dbo.Manufacturers",
-            //    c => new
-            //        {
-            //            Id = c.Int(nullable: false, identity: true),
-            //            Name = c.String(),
-            //            NameAPI = c.String(),
-            //            NameAlt = c.String(),
-            //            MouserUri = c.String(),
-            //            MouserID = c.Long(nullable: false),
-            //            IsUse = c.Boolean(nullable: false),
-            //            NumberOfResult = c.Int(nullable: false),
-            //            StartingRecord = c.Int(nullable: false),
-            //            SearchText = c.String(),
-            //        })
-            //    .PrimaryKey(t => t.Id);
-            
+
+            CreateTable(
+                "dbo.Categories",
+                c => new
+                {
+                    Id = c.Int(nullable: false, identity: true),
+                    Name = c.String(),
+                    ParentId = c.Int(nullable: false),
+                    IsCategory = c.Boolean(nullable: false),
+                    Manufacturer_Id = c.Int(nullable: false),
+                })
+                .PrimaryKey(t => t.Id)
+                .ForeignKey("dbo.Manufacturers", t => t.Manufacturer_Id, cascadeDelete: true)
+                .Index(t => t.Manufacturer_Id);
+
+            CreateTable(
+                "dbo.Manufacturers",
+                c => new
+                {
+                    Id = c.Int(nullable: false, identity: true),
+                    Name = c.String(),
+                    NameAPI = c.String(),
+                    NameAlt = c.String(),
+                    MouserUri = c.String(),
+                    MouserID = c.Long(nullable: false),
+                    IsUse = c.Boolean(nullable: false),
+                    NumberOfResult = c.Int(nullable: false),
+                    StartingRecord = c.Int(nullable: false),
+                    SearchText = c.String(),
+                })
+                .PrimaryKey(t => t.Id);
+
             CreateTable(
                 "dbo.PriceBreaks",
                 c => new
@@ -115,104 +115,104 @@
                 .PrimaryKey(t => t.Id)
                 .ForeignKey("dbo.Goods", t => t.Good_Id, cascadeDelete: true)
                 .Index(t => t.Good_Id);
-            
-            //CreateTable(
-            //    "dbo.ApiRegInfoes",
-            //    c => new
-            //        {
-            //            Id = c.Int(nullable: false, identity: true),
-            //            PartnerId = c.String(),
-            //            UserName = c.String(),
-            //            Password = c.String(),
-            //            Email = c.String(),
-            //            IsActive = c.Boolean(nullable: false),
-            //        })
-            //    .PrimaryKey(t => t.Id);
-            
-            //CreateTable(
-            //    "dbo.ApiSearchSessions",
-            //    c => new
-            //        {
-            //            Id = c.Int(nullable: false, identity: true),
-            //            Date = c.DateTime(nullable: false),
-            //            IsBusy = c.Boolean(nullable: false),
-            //            CountOfRequests = c.Int(nullable: false),
-            //            MachineName = c.String(),
-            //            Description = c.String(),
-            //            CreateDate = c.DateTime(nullable: false),
-            //            ApiRegInfo_Id = c.Int(),
-            //            Manufacturer_Id = c.Int(),
-            //            Proxy_Id = c.Int(),
-            //        })
-            //    .PrimaryKey(t => t.Id)
-            //    .ForeignKey("dbo.ApiRegInfoes", t => t.ApiRegInfo_Id)
-            //    .ForeignKey("dbo.Manufacturers", t => t.Manufacturer_Id)
-            //    .ForeignKey("dbo.Proxies", t => t.Proxy_Id)
-            //    .Index(t => t.ApiRegInfo_Id)
-            //    .Index(t => t.Manufacturer_Id)
-            //    .Index(t => t.Proxy_Id);
-            
-            //CreateTable(
-            //    "dbo.Proxies",
-            //    c => new
-            //        {
-            //            Id = c.Int(nullable: false, identity: true),
-            //            IPAddress = c.String(),
-            //            Port = c.Int(nullable: false),
-            //            IsActive = c.Boolean(nullable: false),
-            //            UserName = c.String(),
-            //            Password = c.String(),
-            //        })
-            //    .PrimaryKey(t => t.Id);
-            
-            //CreateTable(
-            //    "dbo.Queues",
-            //    c => new
-            //        {
-            //            Id = c.Int(nullable: false, identity: true),
-            //            PageNo = c.Int(nullable: false),
-            //            IsBusy = c.Boolean(nullable: false),
-            //            Manufacturer_Id = c.Int(),
-            //        })
-            //    .PrimaryKey(t => t.Id)
-            //    .ForeignKey("dbo.Manufacturers", t => t.Manufacturer_Id)
-            //    .Index(t => t.Manufacturer_Id);
-            
+
+            CreateTable(
+                "dbo.ApiRegInfoes",
+                c => new
+                {
+                    Id = c.Int(nullable: false, identity: true),
+                    PartnerId = c.String(),
+                    UserName = c.String(),
+                    Password = c.String(),
+                    Email = c.String(),
+                    IsActive = c.Boolean(nullable: false),
+                })
+                .PrimaryKey(t => t.Id);
+
+            CreateTable(
+                "dbo.ApiSearchSessions",
+                c => new
+                {
+                    Id = c.Int(nullable: false, identity: true),
+                    Date = c.DateTime(nullable: false),
+                    IsBusy = c.Boolean(nullable: false),
+                    CountOfRequests = c.Int(nullable: false),
+                    MachineName = c.String(),
+                    Description = c.String(),
+                    CreateDate = c.DateTime(nullable: false),
+                    ApiRegInfo_Id = c.Int(),
+                    Manufacturer_Id = c.Int(),
+                    Proxy_Id = c.Int(),
+                })
+                .PrimaryKey(t => t.Id)
+                .ForeignKey("dbo.ApiRegInfoes", t => t.ApiRegInfo_Id)
+                .ForeignKey("dbo.Manufacturers", t => t.Manufacturer_Id)
+                .ForeignKey("dbo.Proxies", t => t.Proxy_Id)
+                .Index(t => t.ApiRegInfo_Id)
+                .Index(t => t.Manufacturer_Id)
+                .Index(t => t.Proxy_Id);
+
+            CreateTable(
+                "dbo.Proxies",
+                c => new
+                {
+                    Id = c.Int(nullable: false, identity: true),
+                    IPAddress = c.String(),
+                    Port = c.Int(nullable: false),
+                    IsActive = c.Boolean(nullable: false),
+                    UserName = c.String(),
+                    Password = c.String(),
+                })
+                .PrimaryKey(t => t.Id);
+
+            CreateTable(
+                "dbo.Queues",
+                c => new
+                {
+                    Id = c.Int(nullable: false, identity: true),
+                    PageNo = c.Int(nullable: false),
+                    IsBusy = c.Boolean(nullable: false),
+                    Manufacturer_Id = c.Int(),
+                })
+                .PrimaryKey(t => t.Id)
+                .ForeignKey("dbo.Manufacturers", t => t.Manufacturer_Id)
+                .Index(t => t.Manufacturer_Id);
+
         }
         
         public override void Down()
         {
-            //DropForeignKey("dbo.Queues", "Manufacturer_Id", "dbo.Manufacturers");
-            //DropForeignKey("dbo.ApiSearchSessions", "Proxy_Id", "dbo.Proxies");
-            //DropForeignKey("dbo.ApiSearchSessions", "Manufacturer_Id", "dbo.Manufacturers");
-            //DropForeignKey("dbo.ApiSearchSessions", "ApiRegInfo_Id", "dbo.ApiRegInfoes");
+            DropForeignKey("dbo.Queues", "Manufacturer_Id", "dbo.Manufacturers");
+            DropForeignKey("dbo.ApiSearchSessions", "Proxy_Id", "dbo.Proxies");
+            DropForeignKey("dbo.ApiSearchSessions", "Manufacturer_Id", "dbo.Manufacturers");
+            DropForeignKey("dbo.ApiSearchSessions", "ApiRegInfo_Id", "dbo.ApiRegInfoes");
             DropForeignKey("dbo.AlternatePackagings", "Good_Id", "dbo.Goods");
             DropForeignKey("dbo.ProductCompliances", "Good_Id", "dbo.Goods");
             DropForeignKey("dbo.ProductAttributes", "Good_Id", "dbo.Goods");
             DropForeignKey("dbo.PriceBreaks", "Good_Id", "dbo.Goods");
             DropForeignKey("dbo.Goods", "Manufacturer_Id", "dbo.Manufacturers");
             DropForeignKey("dbo.Goods", "Category_Id", "dbo.Categories");
-            //DropForeignKey("dbo.Categories", "Manufacturer_Id", "dbo.Manufacturers");
-            //DropIndex("dbo.Queues", new[] { "Manufacturer_Id" });
-            //DropIndex("dbo.ApiSearchSessions", new[] { "Proxy_Id" });
-            //DropIndex("dbo.ApiSearchSessions", new[] { "Manufacturer_Id" });
-            //DropIndex("dbo.ApiSearchSessions", new[] { "ApiRegInfo_Id" });
+            DropForeignKey("dbo.Categories", "Manufacturer_Id", "dbo.Manufacturers");
+            DropIndex("dbo.Queues", new[] { "Manufacturer_Id" });
+            DropIndex("dbo.ApiSearchSessions", new[] { "Proxy_Id" });
+            DropIndex("dbo.ApiSearchSessions", new[] { "Manufacturer_Id" });
+            DropIndex("dbo.ApiSearchSessions", new[] { "ApiRegInfo_Id" });
             DropIndex("dbo.ProductCompliances", new[] { "Good_Id" });
             DropIndex("dbo.ProductAttributes", new[] { "Good_Id" });
             DropIndex("dbo.PriceBreaks", new[] { "Good_Id" });
-            //DropIndex("dbo.Categories", new[] { "Manufacturer_Id" });
+            DropIndex("dbo.Categories", new[] { "Manufacturer_Id" });
             DropIndex("dbo.Goods", new[] { "Manufacturer_Id" });
             DropIndex("dbo.Goods", new[] { "Category_Id" });
             DropIndex("dbo.AlternatePackagings", new[] { "Good_Id" });
-            //DropTable("dbo.Queues");
-            //DropTable("dbo.Proxies");
-            //DropTable("dbo.ApiSearchSessions");
-            //DropTable("dbo.ApiRegInfoes");
+            DropTable("dbo.Queues");
+            DropTable("dbo.Proxies");
+            DropTable("dbo.ApiSearchSessions");
+            DropTable("dbo.ApiRegInfoes");
             DropTable("dbo.ProductCompliances");
             DropTable("dbo.ProductAttributes");
             DropTable("dbo.PriceBreaks");
-            //DropTable("dbo.Manufacturers");
-            //DropTable("dbo.Categories");
+            DropTable("dbo.Manufacturers");
+            DropTable("dbo.Categories");
             DropTable("dbo.Goods");
             DropTable("dbo.AlternatePackagings");
         }

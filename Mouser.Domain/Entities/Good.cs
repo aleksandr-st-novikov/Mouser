@@ -20,10 +20,12 @@ namespace Mouser.Domain.Entities
         [Required]
         [JsonIgnore]
         public Manufacturer Manufacturer { get; set; }
+        [StringLength(100)]
         public string ManufacturerPartNumber { get; set; }
         public int Min { get; set; }
         public int Mult { get; set; }
         [JsonIgnore]
+        [StringLength(100)]
         public string MouserPartNumber { get; set; }
         public ICollection<ProductAttribute> ProductAttributes { get; set; }
         public ICollection<PriceBreak> PriceBreaks { get; set; }
