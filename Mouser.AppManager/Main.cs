@@ -21,6 +21,8 @@ using DevExpress.XtraGrid.Views.Grid;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using System.Threading;
+using HtmlAgilityPack;
+using System.Web;
 
 namespace Mouser.AppManager
 {
@@ -107,6 +109,7 @@ namespace Mouser.AppManager
 
         private void simpleButton1_Click(object sender, EventArgs e)
         {
+            this.timer1.Interval = (Int32)this.spinEdit2.Value;
             this.timer1.Enabled = true;
         }
 
@@ -456,6 +459,54 @@ namespace Mouser.AppManager
                 }
             }
             MessageBox.Show("Done!");
+        }
+
+        private void simpleButton6_Click(object sender, EventArgs e)
+        {
+            var web2 = new HtmlWeb();
+            string currentUri = @"https://ru.mouser.com/ProductDetail/TE-Connectivity/M85049-93-16?qs=2WXlatMagcH45qgLJ7jojA%3D%3D";
+            var doc2 = web2.LoadFromBrowser(HttpUtility.HtmlDecode(currentUri), o =>
+            {
+                WebBrowser webBrowser = (WebBrowser)o;
+                // WAIT until the dynamic text is set
+                return !string.IsNullOrEmpty(webBrowser.Document.GetElementById("mlnkMailTo").InnerText);
+            });
+
+            int sds = 3;
+            return;
+            try
+            {
+                Console.WriteLine(String.Format("*** Begin Request ***"));
+                var request = (System.Net.HttpWebRequest)System.Net.WebRequest.Create("http://api.PhantomJScloud.com/api/browser/v2/a-demo-key-with-low-quota-per-ip-address/");
+                request.ContentType = "application/json";
+                request.Method = "POST";
+                request.Timeout = 45000; //45 seconds
+                request.KeepAlive = false;
+                request.MediaType = "application/json";
+                request.ServicePoint.Expect100Continue = false; //REQUIRED! or you will get 502 Bad Gateway errors
+                using (var streamWriter = new System.IO.StreamWriter(request.GetRequestStream()))
+                {
+                    //you should look at the HTTP Endpoint docs, section about "userRequest" and "pageRequest" 
+                    //for a listing of all the parameters you can pass via the "pageRequestJson" variable.
+                    string pageRequestJson = @"{'url':'https://ru.mouser.com/ProductDetail/TE-Connectivity/M85049-93-16?qs=2WXlatMagcH45qgLJ7jojA%3D%3D','renderType':'plainText','outputAsJson':true }";
+                    streamWriter.Write(pageRequestJson);
+                    streamWriter.Flush();
+                    streamWriter.Close();
+                }
+                var response = (System.Net.HttpWebResponse)request.GetResponse();
+                Console.WriteLine(String.Format("HttpWebResponse.StatusDescription: {0}", response.StatusDescription));
+                using (var streamReader = new System.IO.StreamReader(response.GetResponseStream()))
+                {
+                    string server_reply = streamReader.ReadToEnd();
+                    Console.WriteLine(String.Format("Server Response content: {0}", server_reply));
+                }
+                response.Close();
+            }
+            catch (Exception Ex)
+            {
+                Console.WriteLine("*** HTTP Request Error ***");
+                Console.WriteLine(Ex.Message);
+            }
         }
     }
 }

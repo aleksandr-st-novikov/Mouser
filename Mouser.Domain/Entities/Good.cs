@@ -39,6 +39,10 @@ namespace Mouser.Domain.Entities
         [JsonIgnore]
         public int MultiSimBlue { get; set; }
         public ICollection<ProductCompliance> ProductCompliances { get; set; }
+        [JsonIgnore]
+        public bool IsWebUpdated { get; set; }
+        [JsonIgnore]
+        public bool IsBusy { get; set; }
     }
 
     [Table("Goods")]

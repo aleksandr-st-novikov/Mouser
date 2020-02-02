@@ -85,9 +85,13 @@ namespace Mouser.ClientApi
                         {
                             apiSearchSession.Description = ex.Message + ex.InnerException?.Message;
                             await eFApiSearchSession.AddOrUpdateAsync(apiSearchSession, apiSearchSession.Id);
+                            await eFApiSearchSession.SetNotBusyAsync(apiSearchSession);
                         }
-                        //sw.WriteLine(DateTime.Now.ToString() + " " + ex.Message + ex.InnerException?.Message);
-                        //sw.WriteLine(DateTime.Now.ToString() + " Error Stop (1)");
+                        //using (StreamWriter sw = new StreamWriter(writePath, true, System.Text.Encoding.UTF8))
+                        //{
+                        //    sw.WriteLine(DateTime.Now.ToString() + " " + ex.Message + ex.InnerException?.Message);
+                        //    sw.WriteLine(DateTime.Now.ToString() + " Error Stop (2)");
+                        //}
                     }
                     finally
                     {
