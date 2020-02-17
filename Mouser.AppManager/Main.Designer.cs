@@ -32,6 +32,8 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Main));
             this.tabPane1 = new DevExpress.XtraBars.Navigation.TabPane();
             this.tabNavigationPage1 = new DevExpress.XtraBars.Navigation.TabNavigationPage();
+            this.spinEdit2 = new DevExpress.XtraEditors.SpinEdit();
+            this.labelControl5 = new DevExpress.XtraEditors.LabelControl();
             this.checkEdit1 = new DevExpress.XtraEditors.CheckEdit();
             this.labelControl3 = new DevExpress.XtraEditors.LabelControl();
             this.spinEdit1 = new DevExpress.XtraEditors.SpinEdit();
@@ -108,13 +110,19 @@
             this.repositoryItemGridLookUpEdit1 = new DevExpress.XtraEditors.Repository.RepositoryItemGridLookUpEdit();
             this.repositoryItemGridLookUpEdit1View = new DevExpress.XtraGrid.Views.Grid.GridView();
             this.repositoryItemLookUpEdit2 = new DevExpress.XtraEditors.Repository.RepositoryItemLookUpEdit();
+            this.tabNavigationPage4 = new DevExpress.XtraBars.Navigation.TabNavigationPage();
+            this.groupControl4 = new DevExpress.XtraEditors.GroupControl();
+            this.panelControl3 = new DevExpress.XtraEditors.PanelControl();
+            this.labelControl6 = new DevExpress.XtraEditors.LabelControl();
+            this.simpleButton7 = new DevExpress.XtraEditors.SimpleButton();
+            this.simpleButton8 = new DevExpress.XtraEditors.SimpleButton();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.timer2 = new System.Windows.Forms.Timer(this.components);
-            this.labelControl5 = new DevExpress.XtraEditors.LabelControl();
-            this.spinEdit2 = new DevExpress.XtraEditors.SpinEdit();
+            this.timer3 = new System.Windows.Forms.Timer(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.tabPane1)).BeginInit();
             this.tabPane1.SuspendLayout();
             this.tabNavigationPage1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.spinEdit2.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.checkEdit1.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.spinEdit1.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.textEdit1.Properties)).BeginInit();
@@ -151,7 +159,11 @@
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemGridLookUpEdit1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemGridLookUpEdit1View)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemLookUpEdit2)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.spinEdit2.Properties)).BeginInit();
+            this.tabNavigationPage4.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.groupControl4)).BeginInit();
+            this.groupControl4.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.panelControl3)).BeginInit();
+            this.panelControl3.SuspendLayout();
             this.SuspendLayout();
             // 
             // tabPane1
@@ -159,13 +171,15 @@
             this.tabPane1.Controls.Add(this.tabNavigationPage1);
             this.tabPane1.Controls.Add(this.tabNavigationPage2);
             this.tabPane1.Controls.Add(this.tabNavigationPage3);
+            this.tabPane1.Controls.Add(this.tabNavigationPage4);
             this.tabPane1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabPane1.Location = new System.Drawing.Point(0, 0);
             this.tabPane1.Name = "tabPane1";
             this.tabPane1.Pages.AddRange(new DevExpress.XtraBars.Navigation.NavigationPageBase[] {
             this.tabNavigationPage1,
             this.tabNavigationPage2,
-            this.tabNavigationPage3});
+            this.tabNavigationPage3,
+            this.tabNavigationPage4});
             this.tabPane1.RegularSize = new System.Drawing.Size(1048, 553);
             this.tabPane1.SelectedPage = this.tabNavigationPage1;
             this.tabPane1.Size = new System.Drawing.Size(1048, 553);
@@ -188,6 +202,37 @@
             this.tabNavigationPage1.Controls.Add(this.groupControl1);
             this.tabNavigationPage1.Name = "tabNavigationPage1";
             this.tabNavigationPage1.Size = new System.Drawing.Size(1048, 526);
+            // 
+            // spinEdit2
+            // 
+            this.spinEdit2.EditValue = new decimal(new int[] {
+            5000,
+            0,
+            0,
+            0});
+            this.spinEdit2.Location = new System.Drawing.Point(748, 281);
+            this.spinEdit2.Name = "spinEdit2";
+            this.spinEdit2.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
+            this.spinEdit2.Properties.DisplayFormat.FormatString = "N0";
+            this.spinEdit2.Properties.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
+            this.spinEdit2.Properties.EditFormat.FormatString = "N0";
+            this.spinEdit2.Properties.EditFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
+            this.spinEdit2.Properties.Increment = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
+            this.spinEdit2.Size = new System.Drawing.Size(100, 20);
+            this.spinEdit2.TabIndex = 10;
+            // 
+            // labelControl5
+            // 
+            this.labelControl5.Location = new System.Drawing.Point(643, 284);
+            this.labelControl5.Name = "labelControl5";
+            this.labelControl5.Size = new System.Drawing.Size(29, 13);
+            this.labelControl5.TabIndex = 9;
+            this.labelControl5.Text = "Pause";
             // 
             // checkEdit1
             // 
@@ -932,6 +977,63 @@
             this.repositoryItemLookUpEdit2.Name = "repositoryItemLookUpEdit2";
             this.repositoryItemLookUpEdit2.ValueMember = "Id";
             // 
+            // tabNavigationPage4
+            // 
+            this.tabNavigationPage4.Caption = "API Web";
+            this.tabNavigationPage4.Controls.Add(this.groupControl4);
+            this.tabNavigationPage4.Name = "tabNavigationPage4";
+            this.tabNavigationPage4.Size = new System.Drawing.Size(1048, 526);
+            // 
+            // groupControl4
+            // 
+            this.groupControl4.Controls.Add(this.panelControl3);
+            this.groupControl4.Location = new System.Drawing.Point(3, 3);
+            this.groupControl4.Name = "groupControl4";
+            this.groupControl4.Size = new System.Drawing.Size(608, 304);
+            this.groupControl4.TabIndex = 2;
+            this.groupControl4.Text = "API запросы";
+            // 
+            // panelControl3
+            // 
+            this.panelControl3.Controls.Add(this.labelControl6);
+            this.panelControl3.Controls.Add(this.simpleButton7);
+            this.panelControl3.Controls.Add(this.simpleButton8);
+            this.panelControl3.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panelControl3.Location = new System.Drawing.Point(2, 20);
+            this.panelControl3.Name = "panelControl3";
+            this.panelControl3.Size = new System.Drawing.Size(604, 35);
+            this.panelControl3.TabIndex = 0;
+            // 
+            // labelControl6
+            // 
+            this.labelControl6.Location = new System.Drawing.Point(72, 11);
+            this.labelControl6.Name = "labelControl6";
+            this.labelControl6.Size = new System.Drawing.Size(67, 13);
+            this.labelControl6.TabIndex = 2;
+            this.labelControl6.Text = "Остановлено";
+            // 
+            // simpleButton7
+            // 
+            this.simpleButton7.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("simpleButton7.ImageOptions.Image")));
+            this.simpleButton7.Location = new System.Drawing.Point(34, 7);
+            this.simpleButton7.Name = "simpleButton7";
+            this.simpleButton7.PaintStyle = DevExpress.XtraEditors.Controls.PaintStyles.Light;
+            this.simpleButton7.Size = new System.Drawing.Size(23, 23);
+            this.simpleButton7.TabIndex = 1;
+            this.simpleButton7.ToolTip = "Остановка";
+            this.simpleButton7.Click += new System.EventHandler(this.simpleButton7_Click);
+            // 
+            // simpleButton8
+            // 
+            this.simpleButton8.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("simpleButton8.ImageOptions.Image")));
+            this.simpleButton8.Location = new System.Drawing.Point(5, 5);
+            this.simpleButton8.Name = "simpleButton8";
+            this.simpleButton8.PaintStyle = DevExpress.XtraEditors.Controls.PaintStyles.Light;
+            this.simpleButton8.Size = new System.Drawing.Size(23, 23);
+            this.simpleButton8.TabIndex = 0;
+            this.simpleButton8.ToolTip = "Запуск";
+            this.simpleButton8.Click += new System.EventHandler(this.simpleButton8_Click);
+            // 
             // timer1
             // 
             this.timer1.Interval = 10000;
@@ -943,36 +1045,10 @@
             this.timer2.Interval = 1000;
             this.timer2.Tick += new System.EventHandler(this.timer2_Tick);
             // 
-            // labelControl5
+            // timer3
             // 
-            this.labelControl5.Location = new System.Drawing.Point(643, 284);
-            this.labelControl5.Name = "labelControl5";
-            this.labelControl5.Size = new System.Drawing.Size(29, 13);
-            this.labelControl5.TabIndex = 9;
-            this.labelControl5.Text = "Pause";
-            // 
-            // spinEdit2
-            // 
-            this.spinEdit2.EditValue = new decimal(new int[] {
-            5000,
-            0,
-            0,
-            0});
-            this.spinEdit2.Location = new System.Drawing.Point(748, 281);
-            this.spinEdit2.Name = "spinEdit2";
-            this.spinEdit2.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
-            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
-            this.spinEdit2.Properties.DisplayFormat.FormatString = "N0";
-            this.spinEdit2.Properties.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
-            this.spinEdit2.Properties.EditFormat.FormatString = "N0";
-            this.spinEdit2.Properties.EditFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
-            this.spinEdit2.Properties.Increment = new decimal(new int[] {
-            100,
-            0,
-            0,
-            0});
-            this.spinEdit2.Size = new System.Drawing.Size(100, 20);
-            this.spinEdit2.TabIndex = 10;
+            this.timer3.Interval = 2000;
+            this.timer3.Tick += new System.EventHandler(this.timer3_Tick);
             // 
             // Main
             // 
@@ -991,6 +1067,7 @@
             this.tabPane1.ResumeLayout(false);
             this.tabNavigationPage1.ResumeLayout(false);
             this.tabNavigationPage1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.spinEdit2.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.checkEdit1.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.spinEdit1.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.textEdit1.Properties)).EndInit();
@@ -1028,7 +1105,12 @@
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemGridLookUpEdit1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemGridLookUpEdit1View)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemLookUpEdit2)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.spinEdit2.Properties)).EndInit();
+            this.tabNavigationPage4.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.groupControl4)).EndInit();
+            this.groupControl4.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.panelControl3)).EndInit();
+            this.panelControl3.ResumeLayout(false);
+            this.panelControl3.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -1116,6 +1198,13 @@
         private DevExpress.XtraEditors.SimpleButton simpleButton6;
         private DevExpress.XtraEditors.SpinEdit spinEdit2;
         private DevExpress.XtraEditors.LabelControl labelControl5;
+        private DevExpress.XtraBars.Navigation.TabNavigationPage tabNavigationPage4;
+        private DevExpress.XtraEditors.GroupControl groupControl4;
+        private DevExpress.XtraEditors.PanelControl panelControl3;
+        private DevExpress.XtraEditors.SimpleButton simpleButton7;
+        private DevExpress.XtraEditors.SimpleButton simpleButton8;
+        private System.Windows.Forms.Timer timer3;
+        private DevExpress.XtraEditors.LabelControl labelControl6;
     }
 }
 

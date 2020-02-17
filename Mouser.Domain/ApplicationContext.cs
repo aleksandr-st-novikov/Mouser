@@ -11,6 +11,7 @@ namespace Mouser.Domain
     public class ApplicationContext : DbContext
     {
         public DbSet<Good> Goods { get; set; }
+        public DbSet<GoodData> GoodDatas { get; set; }
         public DbSet<ProductAttribute> ProductAttributes { get; set; }
         public DbSet<PriceBreak> PriceBreaks { get; set; }
         public DbSet<AlternatePackaging> AlternatePackagings { get; set; }
@@ -21,6 +22,8 @@ namespace Mouser.Domain
         public DbSet<Proxy> Proxies { get; set; }
         public DbSet<ApiSearchSession> ApiSearchSessions { get; set; }
         public DbSet<ApiRegInfo> ApiRegInfos { get; set; }
+        public DbSet<SystemSetting> SystemSettings { get; set; }
+        public DbSet<GoodDataError> GoodDataErrors { get; set; }
 
         public ApplicationContext() : base("DBConnection")
         { }

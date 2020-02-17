@@ -1,4 +1,5 @@
-﻿using Mouser.Domain;
+﻿using HtmlAgilityPack;
+using Mouser.Domain;
 using Mouser.Domain.Concrete;
 using Mouser.Domain.Entities;
 using Mouser.Service.com.mouser.api;
@@ -7,8 +8,10 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web;
 
 namespace Mouser.Service.Api
 {
@@ -196,5 +199,81 @@ namespace Mouser.Service.Api
                 await eFManufacturer.AddOrUpdateAsync(manufacturer, manufacturer.Id);
             }
         }
+
+        static HttpClient client = new HttpClient();
+        public static async Task GetFromWebAsync(
+            ApplicationContext context,
+            Good good,
+            string accessKey = "76f28ee177457757896164a36c9e9a2c",
+            string proxyLocation = "US",
+            string renderJs = "1")
+        {
+            var uriBuilder = new UriBuilder("https://api.scrapestack.com/scrape");
+            var query = HttpUtility.ParseQueryString(uriBuilder.Query);
+            query["access_key"] = accessKey;
+            query["proxy_location"] = proxyLocation;
+            query["render_js"] = renderJs;
+            query["url"] = good.ProductDetailUrl.Replace("ru.", "").Replace("eu.", "");
+            //query["url"] = good.ProductDetailUrl.Contains("wwww.") ?
+            //    good.ProductDetailUrl.Replace("ru.", "").Replace("eu.", "").Replace("wwww.", "www2.") :
+            //    good.ProductDetailUrl.Replace("ru.", "").Replace("eu.", "").Replace("https://", "https://www2.");
+            //query["url"] = good.ProductDetailUrl.Replace("ru.", "").Replace("eu.", "");
+            //query["url"] = good.ProductDetailUrl.Replace("eu.", "ru.");
+            uriBuilder.Query = query.ToString();
+            string url = uriBuilder.ToString();
+
+            string resp = await client.GetStringAsync(url);
+
+            if (
+                !String.IsNullOrEmpty(resp)
+                && !resp.Contains("<meta name=\"ROBOTS\" content=\"NOINDEX, NOFOLLOW\">")
+                && !resp.Contains("{\"success\":false,\"error")
+                )
+            {
+                good.IsWebDownloaded = true;
+                GoodData goodData = await context.GoodDatas.FirstOrDefaultAsync(g => g.Good.Id == good.Id);
+                if (goodData != null)
+                {
+                    goodData.Response = resp;
+                    goodData.CreationDate = DateTime.Now;
+                    goodData.Url = url;
+                }
+                else
+                {
+                    context.GoodDatas.Add(new GoodData { CreationDate = DateTime.Now, Good = good, Response = resp, Url = url });
+                }
+            }
+            else
+            {
+                context.GoodDataErrors.Add(new GoodDataError { CreationDate = DateTime.Now, Good = good, Response = resp, Url = url });
+            }
+            await context.SaveChangesAsync();
+
+            return;
+
+            var htmlDoc = new HtmlDocument();
+            htmlDoc.LoadHtml(resp);
+
+            //*[@id="pdpPricingAvailability"]/div[2]/div[2]
+            //*[@id="pdpPricingAvailability"]/div[2]/div[2]/div[2]
+            //*[@id="pdpPricingAvailability"]/div[2]/div[2]
+
+            var ddd = htmlDoc.DocumentNode.SelectNodes("//*[@id='pdpPricingAvailability']/div[2]/div[2]/div[@class='div-table-row']");
+
+            int countPriceDiv = htmlDoc.DocumentNode.SelectNodes("//*[@id='pdpPricingAvailability']/div[2]/div[2]/div[@class='div-table-row']").Count();
+            for (int i = 1; i <= countPriceDiv; i++)
+            {
+                var priceDiv = htmlDoc.DocumentNode.SelectSingleNode("//*[@id='pdpPricingAvailability']/div[2]/div[2]/div[ i + 1]");
+            }
+
+            HttpResponseMessage response = await client.GetAsync(url);
+            if (response.IsSuccessStatusCode)
+            {
+                var result = await response.Content.ReadAsStringAsync();
+
+            }
+            int dd = 5;
+        }
+
     }
 }

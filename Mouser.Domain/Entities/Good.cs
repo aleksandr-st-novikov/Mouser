@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -43,6 +44,29 @@ namespace Mouser.Domain.Entities
         public bool IsWebUpdated { get; set; }
         [JsonIgnore]
         public bool IsBusy { get; set; }
+        [JsonIgnore]
+        public bool IsWebDownloaded { get; set; }
+    }
+
+    public class GoodData
+    {
+        [Key]
+        public int Id { get; set; }
+        public DateTime CreationDate { get; set; }
+        public Good Good { get; set; }
+        public string Url { get; set; }
+        //[Column(TypeName = "text")]
+        public string Response { get; set; }
+    }
+
+    public class GoodDataError
+    {
+        [Key]
+        public int Id { get; set; }
+        public DateTime CreationDate { get; set; }
+        public Good Good { get; set; }
+        public string Url { get; set; }
+        public string Response { get; set; }
     }
 
     [Table("Goods")]

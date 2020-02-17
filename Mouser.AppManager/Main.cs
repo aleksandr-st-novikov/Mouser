@@ -508,5 +508,56 @@ namespace Mouser.AppManager
                 Console.WriteLine(Ex.Message);
             }
         }
+
+        int countTimer3Iteration = 0;
+        private void simpleButton8_Click(object sender, EventArgs e)
+        {
+            countTimer3Iteration = 0;
+            timer3.Enabled = true;
+        }
+
+        private async void timer3_Tick(object sender, EventArgs e)
+        {
+            if (countTimer3Iteration != 0) labelControl6.Text = "В работе:" + countTimer3Iteration;
+            if (countTimer3Iteration > 10) return;
+
+            using (Domain.ApplicationContext context = new Domain.ApplicationContext())
+            {
+                //SystemSetting systemSetting = context.SystemSettings.FirstOrDefault();
+
+                Good good = context.Goods.OrderBy(g => g.Manufacturer.Id).FirstOrDefault(g => !g.IsBusy && !g.IsWebDownloaded);
+                try
+                {
+                    if (good != null)
+                    {
+                        countTimer3Iteration++;
+
+                        good.IsBusy = true;
+                        context.SaveChanges();
+
+                        //if (systemSetting == null)
+                        //{
+                        //    context.SystemSettings.Add(new SystemSetting { ApiScrapperCountRequests = 1 });
+                        //}
+                        //else
+                        //{
+                        //    systemSetting.ApiScrapperCountRequests++;
+                        //}
+                        await Service.Api.Methods.GetFromWebAsync(context, good);
+                    }
+                }
+                finally
+                {
+                    countTimer3Iteration--;
+                    good.IsBusy = false;
+                    await context.SaveChangesAsync();
+                }
+            }
+        }
+
+        private void simpleButton7_Click(object sender, EventArgs e)
+        {
+            timer3.Enabled = false;
+        }
     }
 }
