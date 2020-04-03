@@ -57,6 +57,8 @@ namespace Mouser.Domain.Entities
         public string Url { get; set; }
         //[Column(TypeName = "text")]
         public string Response { get; set; }
+        [MaxLength(2)]
+        public string Location { get; set; }
     }
 
     public class GoodDataError

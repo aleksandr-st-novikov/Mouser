@@ -35,7 +35,7 @@ namespace Mouser.ClientWeb
                     {
                         Service.Web.Methods.PopulateGoodBrowser(context, good);
                     }
-                    catch (Exception ex) { }
+                    //catch (Exception ex) { }
                     finally
                     {
                         good.IsBusy = false;

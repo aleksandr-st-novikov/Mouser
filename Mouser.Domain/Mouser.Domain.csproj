@@ -119,6 +119,10 @@
     <Compile Include="Migrations\202002172032211_9.designer.cs">
       <DependentUpon>202002172032211_9.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202002260525448_10.cs" />
+    <Compile Include="Migrations\202002260525448_10.designer.cs">
+      <DependentUpon>202002260525448_10.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SqliteContext.cs" />
@@ -160,6 +164,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202002172032211_9.resx">
       <DependentUpon>202002172032211_9.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202002260525448_10.resx">
+      <DependentUpon>202002260525448_10.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

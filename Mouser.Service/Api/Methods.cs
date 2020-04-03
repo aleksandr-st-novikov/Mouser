@@ -17,6 +17,38 @@ namespace Mouser.Service.Api
 {
     public class Methods
     {
+
+        private enum locations
+        {
+            us = 1,
+            gb,
+            au,
+            at,
+            bg,
+            ca,
+            co,
+            cy,
+            cz,
+            dk,
+            ee,
+            fi,
+            fr,
+            de,
+            gr,
+            hu,
+            ie,
+            it,
+            il,
+            lv,
+            lt,
+            lu,
+            md,
+            nz,
+            no,
+            es,
+            tr
+        }
+
         public static async Task SearchByKeywordMfrRequestAsync(ApplicationContext context, Proxy proxy, ApiRegInfo apiRegInfo, string keyword, Manufacturer manufacturer, int records, int startingRecord)
         {
             using (var searchAPI = new SearchAPI())
@@ -208,6 +240,9 @@ namespace Mouser.Service.Api
             string proxyLocation = "US",
             string renderJs = "1")
         {
+            Random locationRnd = new Random();
+            proxyLocation = Enum.GetName(typeof(locations), locationRnd.Next(1, 27));
+
             var uriBuilder = new UriBuilder("https://api.scrapestack.com/scrape");
             var query = HttpUtility.ParseQueryString(uriBuilder.Query);
             query["access_key"] = accessKey;
@@ -237,10 +272,11 @@ namespace Mouser.Service.Api
                     goodData.Response = resp;
                     goodData.CreationDate = DateTime.Now;
                     goodData.Url = url;
+                    goodData.Location = proxyLocation;
                 }
                 else
                 {
-                    context.GoodDatas.Add(new GoodData { CreationDate = DateTime.Now, Good = good, Response = resp, Url = url });
+                    context.GoodDatas.Add(new GoodData { CreationDate = DateTime.Now, Good = good, Response = resp, Url = url, Location = proxyLocation });
                 }
             }
             else

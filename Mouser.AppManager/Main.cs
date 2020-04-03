@@ -372,21 +372,69 @@ namespace Mouser.AppManager
             Directory.CreateDirectory(folderPath);
 
             Int32 manufacturerId = Convert.ToInt32(this.gridView4.GetFocusedRowCellValue("Id"));
-            Manufacturer manufacturer = await dbContext.Manufacturers.FindAsync(manufacturerId);
+            await ExportToJSONAsync(folderPath, manufacturerId);
+        }
+
+        private async Task ExportToJSONAsync(string folderPath, int manufacturerId)
+        {
+            using (Domain.ApplicationContext context = new Domain.ApplicationContext())
+            {
+                Manufacturer manufacturer = await context.Manufacturers.FindAsync(manufacturerId);
+
+                Directory.CreateDirectory(folderPath + "\\" + string.Join("_", manufacturer.Name.Split(Path.GetInvalidFileNameChars())));
+
+                List<Category> categories = await context.Categories.Where(c => c.Manufacturer.Id == manufacturerId && c.IsCategory).ToListAsync();
+
+                foreach (var category in categories.OrderBy(c => c.Name))
+                {
+                    Directory.CreateDirectory(folderPath + "\\" + string.Join("_", manufacturer.Name.Split(Path.GetInvalidFileNameChars())) +
+                        "\\" + string.Join("_", category.Name.Split(Path.GetInvalidFileNameChars())));
+
+                    List<Category> subCategories = await context.Categories.Where(c => c.ParentId == category.Id && !c.IsCategory).ToListAsync();
+                    foreach (var subCategory in subCategories)
+                    {
+                        await SaveJsonFileAsync(
+                        folderPath + "\\" + string.Join("_", manufacturer.Name.Split(Path.GetInvalidFileNameChars())) +
+                            "\\" + string.Join("_", category.Name.Split(Path.GetInvalidFileNameChars())) +
+                            "\\" + string.Join("_", subCategory.Name.Split(Path.GetInvalidFileNameChars())),
+                        manufacturerId,
+                        manufacturer,
+                        subCategory);
+                    }
+                }
+
+                List<Category> lostCategories = await context.Categories
+                    .Where(c => c.ParentId == 0 && c.Manufacturer.Id == manufacturerId && !c.IsCategory)
+                    .ToListAsync();
+                foreach (var lostCategory in lostCategories.OrderBy(c => c.Name))
+                {
+                    await SaveJsonFileAsync(
+                        folderPath + "\\" + string.Join("_", manufacturer.Name.Split(Path.GetInvalidFileNameChars())) +
+                        "\\" + string.Join("_", lostCategory.Name.Split(Path.GetInvalidFileNameChars())),
+                        manufacturerId,
+                        manufacturer,
+                        lostCategory);
+                }
+            }
+        }
+
+        private void ExportToJSON(string folderPath, int manufacturerId)
+        {
+            Manufacturer manufacturer = dbContext.Manufacturers.Find(manufacturerId);
 
             Directory.CreateDirectory(folderPath + "\\" + string.Join("_", manufacturer.Name.Split(Path.GetInvalidFileNameChars())));
 
-            List<Category> categories = await dbContext.Categories.Where(c => c.Manufacturer.Id == manufacturerId && c.IsCategory).ToListAsync();
+            List<Category> categories = dbContext.Categories.Where(c => c.Manufacturer.Id == manufacturerId && c.IsCategory).ToList();
 
             foreach (var category in categories)
             {
                 Directory.CreateDirectory(folderPath + "\\" + string.Join("_", manufacturer.Name.Split(Path.GetInvalidFileNameChars())) +
                     "\\" + string.Join("_", category.Name.Split(Path.GetInvalidFileNameChars())));
 
-                List<Category> subCategories = await dbContext.Categories.Where(c => c.ParentId == category.Id && !c.IsCategory).ToListAsync();
+                List<Category> subCategories = dbContext.Categories.Where(c => c.ParentId == category.Id && !c.IsCategory).ToList();
                 foreach (var subCategory in subCategories)
                 {
-                    await SaveJsonFile(
+                    SaveJsonFile(
                     folderPath + "\\" + string.Join("_", manufacturer.Name.Split(Path.GetInvalidFileNameChars())) +
                         "\\" + string.Join("_", category.Name.Split(Path.GetInvalidFileNameChars())) +
                         "\\" + string.Join("_", subCategory.Name.Split(Path.GetInvalidFileNameChars())) + ".json",
@@ -396,12 +444,12 @@ namespace Mouser.AppManager
                 }
             }
 
-            List<Category> lostCategories = await dbContext.Categories
+            List<Category> lostCategories = dbContext.Categories
                 .Where(c => c.ParentId == 0 && c.Manufacturer.Id == manufacturerId && !c.IsCategory)
-                .ToListAsync();
+                .ToList();
             foreach (var lostCategory in lostCategories)
             {
-                await SaveJsonFile(
+                SaveJsonFile(
                     folderPath + "\\" + string.Join("_", manufacturer.Name.Split(Path.GetInvalidFileNameChars())) +
                     "\\" + string.Join("_", lostCategory.Name.Split(Path.GetInvalidFileNameChars())) + ".json",
                     manufacturerId,
@@ -410,20 +458,67 @@ namespace Mouser.AppManager
             }
         }
 
-        private async Task SaveJsonFile(string path, int manufacturerId, Manufacturer manufacturer, Category сategory)
+        private async Task SaveJsonFileAsync(string path, int manufacturerId, Manufacturer manufacturer, Category сategory)
         {
-            List<Good> goods = await dbContext.Goods
+            int goodsCount = 0;
+            using (Domain.ApplicationContext context = new Domain.ApplicationContext())
+            {
+                context.Database.CommandTimeout = 600;
+
+                goodsCount = await context.Goods.Where(p => p.Manufacturer.Id == manufacturerId && p.Category.Id == сategory.Id && p.MouserPartNumber != "N/A").CountAsync();
+            }
+
+            int count = 1;
+            int pageCount = 50000;
+            int loopIteration = goodsCount / pageCount + 1;
+
+            while (count <= loopIteration)
+            {
+                using (Domain.ApplicationContext context = new Domain.ApplicationContext())
+                {
+                    context.Database.CommandTimeout = 600;
+
+                    List<Good> goods = await context.Goods.OrderBy(g => g.Id)
                                     .Include(p => p.AlternatePackagings)
                                     .Include(p => p.PriceBreaks)
                                     .Include(p => p.ProductAttributes)
                                     .Include(p => p.ProductCompliances)
                                     .Where(p => p.Manufacturer.Id == manufacturerId && p.Category.Id == сategory.Id && p.MouserPartNumber != "N/A")
+                                    .Skip(pageCount * (count - 1))
+                                    .Take(pageCount)
                                     .ToListAsync();
-            JsonSerializer serializer = new JsonSerializer();
-            using (StreamWriter sw = new StreamWriter(path))
-            using (JsonWriter writer = new JsonTextWriter(sw))
+
+                    if (goods.Count == 0) return;
+
+                    JsonSerializer serializer = new JsonSerializer();
+                    string currentPath = loopIteration == 1 ? path + ".json" : path + "_" + count + ".json";
+                    using (StreamWriter sw = new StreamWriter(currentPath))
+                    using (JsonWriter writer = new JsonTextWriter(sw))
+                    {
+                        serializer.Serialize(writer, goods);
+                    }
+                    count++;
+                }
+            }
+        }
+
+        private void SaveJsonFile(string path, int manufacturerId, Manufacturer manufacturer, Category сategory)
+        {
+            using (Domain.ApplicationContext context = new Domain.ApplicationContext())
             {
-                serializer.Serialize(writer, goods);
+                List<Good> goods = context.Goods
+                                    .Include(p => p.AlternatePackagings)
+                                    .Include(p => p.PriceBreaks)
+                                    .Include(p => p.ProductAttributes)
+                                    .Include(p => p.ProductCompliances)
+                                    .Where(p => p.Manufacturer.Id == manufacturerId && p.Category.Id == сategory.Id && p.MouserPartNumber != "N/A")
+                                    .ToList();
+                JsonSerializer serializer = new JsonSerializer();
+                using (StreamWriter sw = new StreamWriter(path))
+                using (JsonWriter writer = new JsonTextWriter(sw))
+                {
+                    serializer.Serialize(writer, goods);
+                }
             }
         }
 
@@ -558,6 +653,62 @@ namespace Mouser.AppManager
         private void simpleButton7_Click(object sender, EventArgs e)
         {
             timer3.Enabled = false;
+        }
+
+        private void simpleButton10_Click(object sender, EventArgs e)
+        {
+            timer4.Enabled = true;
+        }
+
+        private void simpleButton9_Click(object sender, EventArgs e)
+        {
+            timer4.Enabled = false;
+        }
+
+        private Task StartClientWebAsync()
+        {
+            return Task.Factory.StartNew(() =>
+            {
+                Process process = new Process();
+                process.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
+                process.StartInfo.FileName = this.textEdit2.Text + "Mouser.ClientWeb.exe";
+                process.Start();
+                //process.WaitForExit();
+                //var exitCode = process.ExitCode;
+            });
+        }
+
+        private async void timer4_Tick(object sender, EventArgs e)
+        {
+            Process[] localByName = Process.GetProcessesByName("Mouser.ClientWeb");
+            if (localByName?.Count() <= spinEdit3.Value)
+            {
+                await StartClientWebAsync();
+                labelControl7.Text = "В работе:" + localByName?.Count();
+            }
+        }
+
+        private void simpleButton11_Click(object sender, EventArgs e)
+        {
+            using (Domain.ApplicationContext context = new Domain.ApplicationContext())
+            {
+                Mouser.Service.Web.Methods.PopulateCategory(context);
+            }
+        }
+
+        private async void simpleButton12_Click(object sender, EventArgs e)
+        {
+            using (Domain.ApplicationContext context = new Domain.ApplicationContext())
+            {
+                String folderPath = @"D:\MouserExport";
+                Directory.CreateDirectory(folderPath);
+
+                var manufacturers = await context.Manufacturers.Where(m => m.MouserID != 0).ToListAsync();
+                foreach (var m in manufacturers)
+                {
+                    await ExportToJSONAsync(folderPath, m.Id);
+                }
+            }
         }
     }
 }
